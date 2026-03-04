@@ -1,883 +1,359 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Primetech Solutions – IT Consultancy</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  :root {
-    --gold: #F5C518;
-    --gold-dim: #c9a010;
-    --black: #0a0a0a;
-    --surface: #111111;
-    --surface2: #1a1a1a;
-    --border: rgba(245,197,24,0.15);
-    --text: #f0f0f0;
-    --muted: #888;
-    --font-head: 'Syne', sans-serif;
-    --font-body: 'DM Sans', sans-serif;
-  }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--black);
-    color: var(--text);
-    font-family: var(--font-body);
-    font-weight: 300;
-    overflow-x: hidden;
-  }
-
-  /* Noise overlay */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 9999;
-    opacity: 0.4;
-  }
-
-  /* NAV */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1.2rem 5vw;
-    background: rgba(10,10,10,0.85);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--border);
-  }
-
-  .nav-logo {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    text-decoration: none;
-  }
-
-  .nav-logo img {
-    height: 38px;
-    width: 38px;
-    object-fit: contain;
-  }
-
-  .nav-logo-text {
-    font-family: var(--font-head);
-    font-weight: 800;
-    font-size: 1.1rem;
-    color: var(--text);
-    letter-spacing: -0.01em;
-  }
-  .nav-logo-text span { color: var(--gold); }
-
-  .nav-links {
-    display: flex;
-    gap: 2.5rem;
-    list-style: none;
-  }
-
-  .nav-links a {
-    font-family: var(--font-body);
-    font-size: 0.85rem;
-    font-weight: 400;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--muted);
-    text-decoration: none;
-    transition: color 0.2s;
-  }
-  .nav-links a:hover { color: var(--gold); }
-
-  .nav-cta {
-    background: var(--gold);
-    color: var(--black) !important;
-    padding: 0.5rem 1.25rem;
-    border-radius: 4px;
-    font-weight: 500 !important;
-    transition: background 0.2s !important;
-  }
-  .nav-cta:hover { background: #e0b410 !important; color: var(--black) !important; }
-
-  /* HERO */
-  #hero {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    padding: 10rem 5vw 6rem;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .hero-grid-bg {
-    position: absolute;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(245,197,24,0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(245,197,24,0.04) 1px, transparent 1px);
-    background-size: 60px 60px;
-    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
-  }
-
-  .hero-glow {
-    position: absolute;
-    width: 700px;
-    height: 700px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(245,197,24,0.08) 0%, transparent 70%);
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -55%);
-    pointer-events: none;
-  }
-
-  .hero-content {
-    position: relative;
-    max-width: 800px;
-  }
-
-  .hero-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    border: 1px solid var(--border);
-    border-radius: 100px;
-    padding: 0.35rem 1rem;
-    font-size: 0.75rem;
-    font-weight: 400;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 2rem;
-    animation: fadeUp 0.7s ease both;
-  }
-
-  .hero-badge::before {
-    content: '';
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: var(--gold);
-    animation: pulse 2s infinite;
-  }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.5; transform: scale(1.3); }
-  }
-
-  h1 {
-    font-family: var(--font-head);
-    font-size: clamp(3rem, 7vw, 6rem);
-    font-weight: 800;
-    line-height: 1.0;
-    letter-spacing: -0.03em;
-    margin-bottom: 1.5rem;
-    animation: fadeUp 0.7s 0.1s ease both;
-  }
-
-  h1 em {
-    font-style: normal;
-    color: var(--gold);
-    position: relative;
-  }
-
-  .hero-sub {
-    font-size: 1.1rem;
-    color: var(--muted);
-    line-height: 1.7;
-    max-width: 520px;
-    margin-bottom: 2.5rem;
-    animation: fadeUp 0.7s 0.2s ease both;
-  }
-
-  .hero-actions {
-    display: flex;
-    gap: 1rem;
-    animation: fadeUp 0.7s 0.3s ease both;
-  }
-
-  .btn-primary {
-    background: var(--gold);
-    color: var(--black);
-    border: none;
-    padding: 0.85rem 2rem;
-    border-radius: 4px;
-    font-family: var(--font-body);
-    font-size: 0.9rem;
-    font-weight: 500;
-    cursor: pointer;
-    text-decoration: none;
-    transition: background 0.2s, transform 0.15s;
-    display: inline-block;
-  }
-  .btn-primary:hover { background: #e0b410; transform: translateY(-1px); }
-
-  .btn-ghost {
-    background: transparent;
-    color: var(--text);
-    border: 1px solid rgba(255,255,255,0.15);
-    padding: 0.85rem 2rem;
-    border-radius: 4px;
-    font-family: var(--font-body);
-    font-size: 0.9rem;
-    font-weight: 400;
-    cursor: pointer;
-    text-decoration: none;
-    transition: border-color 0.2s, color 0.2s;
-    display: inline-block;
-  }
-  .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(24px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  /* SECTIONS SHARED */
-  section {
-    padding: 7rem 5vw;
-  }
-
-  .section-label {
-    font-size: 0.7rem;
-    font-weight: 500;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 1rem;
-  }
-
-  .section-title {
-    font-family: var(--font-head);
-    font-size: clamp(2rem, 4vw, 3.2rem);
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    line-height: 1.1;
-    margin-bottom: 1.5rem;
-  }
-
-  .section-desc {
-    color: var(--muted);
-    font-size: 1rem;
-    line-length: 1.75;
-    max-width: 540px;
-  }
-
-  /* SERVICES */
-  #services {
-    background: var(--surface);
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-  }
-
-  .services-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: 2rem;
-    margin-bottom: 4rem;
-    flex-wrap: wrap;
-  }
-
-  .services-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1px;
-    background: var(--border);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    overflow: hidden;
-  }
-
-  .service-card {
-    background: var(--surface);
-    padding: 2.5rem;
-    position: relative;
-    transition: background 0.3s;
-    overflow: hidden;
-  }
-
-  .service-card::before {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0;
-    width: 100%; height: 2px;
-    background: var(--gold);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.4s ease;
-  }
-  .service-card:hover::before { transform: scaleX(1); }
-  .service-card:hover { background: var(--surface2); }
-
-  .service-icon {
-    width: 44px; height: 44px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 1.5rem;
-    color: var(--gold);
-    font-size: 1.2rem;
-  }
-
-  .service-title {
-    font-family: var(--font-head);
-    font-size: 1.05rem;
-    font-weight: 700;
-    margin-bottom: 0.75rem;
-    letter-spacing: -0.01em;
-  }
-
-  .service-desc {
-    font-size: 0.875rem;
-    color: var(--muted);
-    line-height: 1.7;
-  }
-
-  /* WHY US */
-  #why {
-    position: relative;
-  }
-
-  .why-inner {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 6rem;
-    align-items: center;
-  }
-
-  .why-visual {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .why-ring {
-    width: 320px;
-    height: 320px;
-    border-radius: 50%;
-    border: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    animation: spin 20s linear infinite;
-  }
-
-  .why-ring-inner {
-    width: 220px;
-    height: 220px;
-    border-radius: 50%;
-    border: 1px solid rgba(245,197,24,0.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    animation: spin 12s linear infinite reverse;
-  }
-
-  .why-ring-core {
-    width: 130px;
-    height: 130px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(245,197,24,0.15), transparent);
-    border: 1px solid rgba(245,197,24,0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    animation: none;
-  }
-
-  .why-ring-core img {
-    width: 60px;
-    height: 60px;
-    object-fit: contain;
-    animation: spin 20s linear infinite reverse;
-  }
-
-  .dot {
-    position: absolute;
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: var(--gold);
-    top: -4px; left: 50%;
-    transform: translateX(-50%);
-    box-shadow: 0 0 12px var(--gold);
-  }
-
-  @keyframes spin {
-    to { transform: rotate(360deg); }
-  }
-
-  .why-points {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    margin-top: 2.5rem;
-  }
-
-  .why-point {
-    display: flex;
-    gap: 1rem;
-    align-items: flex-start;
-  }
-
-  .why-point-num {
-    font-family: var(--font-head);
-    font-size: 0.7rem;
-    font-weight: 700;
-    color: var(--gold);
-    letter-spacing: 0.05em;
-    padding-top: 0.25rem;
-    flex-shrink: 0;
-    width: 24px;
-  }
-
-  .why-point-text strong {
-    display: block;
-    font-family: var(--font-head);
-    font-weight: 700;
-    font-size: 0.95rem;
-    margin-bottom: 0.3rem;
-  }
-
-  .why-point-text p {
-    font-size: 0.85rem;
-    color: var(--muted);
-    line-height: 1.65;
-  }
-
-  /* CONTACT */
-  #contact {
-    background: var(--surface);
-    border-top: 1px solid var(--border);
-  }
-
-  .contact-inner {
-    display: grid;
-    grid-template-columns: 1fr 1.3fr;
-    gap: 6rem;
-    align-items: start;
-  }
-
-  .contact-info {
-    position: sticky;
-    top: 8rem;
-  }
-
-  .contact-item {
-    display: flex;
-    gap: 1rem;
-    align-items: flex-start;
-    margin-top: 2.5rem;
-  }
-
-  .contact-item-icon {
-    width: 36px; height: 36px;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--gold);
-    flex-shrink: 0;
-    font-size: 0.9rem;
-  }
-
-  .contact-item-label {
-    font-size: 0.7rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 0.25rem;
-  }
-
-  .contact-item-value {
-    font-size: 0.9rem;
-    color: var(--text);
-  }
-
-  .contact-item-value a {
-    color: var(--text);
-    text-decoration: none;
-    transition: color 0.2s;
-  }
-  .contact-item-value a:hover { color: var(--gold); }
-
-  /* FORM */
-  .contact-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-  }
-
-  .form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.25rem;
-  }
-
-  .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .form-group label {
-    font-size: 0.75rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-
-  .form-group input,
-  .form-group textarea,
-  .form-group select {
-    background: var(--surface2);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 4px;
-    padding: 0.85rem 1rem;
-    color: var(--text);
-    font-family: var(--font-body);
-    font-size: 0.9rem;
-    font-weight: 300;
-    transition: border-color 0.2s;
-    outline: none;
-    width: 100%;
-  }
-
-  .form-group input:focus,
-  .form-group textarea:focus,
-  .form-group select:focus {
-    border-color: var(--gold);
-  }
-
-  .form-group textarea {
-    resize: vertical;
-    min-height: 120px;
-  }
-
-  .form-group select option {
-    background: var(--surface2);
-  }
-
-  .form-submit {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    flex-wrap: wrap;
-  }
-
-  .form-note {
-    font-size: 0.78rem;
-    color: var(--muted);
-  }
-
-  .success-msg {
-    display: none;
-    background: rgba(245,197,24,0.08);
-    border: 1px solid rgba(245,197,24,0.3);
-    border-radius: 4px;
-    padding: 1rem;
-    font-size: 0.9rem;
-    color: var(--gold);
-    text-align: center;
-  }
-
-  /* FOOTER */
-  footer {
-    padding: 2rem 5vw;
-    border-top: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
-
-  .footer-copy {
-    font-size: 0.8rem;
-    color: var(--muted);
-  }
-
-  .footer-logo {
-    font-family: var(--font-head);
-    font-weight: 800;
-    font-size: 0.95rem;
-    letter-spacing: -0.01em;
-    color: var(--text);
-  }
-  .footer-logo span { color: var(--gold); }
-
-  /* RESPONSIVE */
-  @media (max-width: 900px) {
-    .why-inner, .contact-inner { grid-template-columns: 1fr; gap: 3rem; }
-    .why-visual { display: none; }
-    .form-row { grid-template-columns: 1fr; }
-    .nav-links { display: none; }
-  }
-
-  /* Scroll reveal */
-  .reveal {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
-  }
-  .reveal.visible { opacity: 1; transform: translateY(0); }
-</style>
-</head>
-<body>
-
-<!-- NAV -->
-<nav>
-  <a class="nav-logo" href="#">
-   <!-- Inline SVG logo to avoid missing asset -->
-<svg width="38" height="38" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-label="Primetech Solutions Logo">
-  <circle cx="50" cy="50" r="48" fill="var(--gold)" />
-  <text x="50" y="64" font-size="60" font-family="var(--font-head)" font-weight="800" text-anchor="middle" fill="var(--black)">P</text>
-</svg>
-<span class="nav-logo-text">Primetech<span> Solutions</span></span>
-  </a>
-  <ul class="nav-links">
-    <li><a href="#services">Services</a></li>
-    <li><a href="#why">Why Us</a></li>
-    <li><a href="#contact" class="nav-cta">Get in Touch</a></li>
-  </ul>
-</nav>
-
-<!-- HERO -->
-<section id="hero">
-  <div class="hero-grid-bg"></div>
-  <div class="hero-glow"></div>
-  <div class="hero-content">
-    <div class="hero-badge">IT Consultancy · Göteborg, Sweden</div>
-    <h1>Technology<br>that <em>drives</em><br>your business</h1>
-    <p class="hero-sub">Primetech Solutions delivers enterprise-grade IT services — from managed infrastructure to cloud architecture — built for businesses that can't afford to stand still.</p>
-    <div class="hero-actions">
-      <a href="#contact" class="btn-primary">Start a conversation</a>
-      <a href="#services" class="btn-ghost">Our services</a>
-    </div>
-  </div>
-</section>
-
-<!-- SERVICES -->
-<section id="services">
-  <div class="services-header reveal">
-    <div>
-      <div class="section-label">What we do</div>
-      <div class="section-title">End-to-end IT<br>expertise</div>
-    </div>
-    <p class="section-desc">From day-to-day operations to complex cloud migrations, we handle the full spectrum of your IT needs with precision and strategic insight.</p>
-  </div>
-
-  <div class="services-grid reveal">
-    <div class="service-card">
-      <div class="service-icon">
-        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M5 12H3l9-9 9 9h-2M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/></svg>
-      </div>
-      <div class="service-title">IT Operations & Managed Services</div>
-      <div class="service-desc">Proactive monitoring, helpdesk support, and complete management of your IT environment so your team can stay focused on what matters.</div>
-    </div>
-    <div class="service-card">
-      <div class="service-icon">
-        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/></svg>
-      </div>
-      <div class="service-title">Microsoft 365 & Cloud Architecture</div>
-      <div class="service-desc">Strategic design and deployment of Microsoft 365 environments and scalable cloud infrastructures aligned to your business objectives.</div>
-    </div>
-    <div class="service-card">
-      <div class="service-icon">
-        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-      </div>
-      <div class="service-title">Security, Backup & Compliance</div>
-      <div class="service-desc">Comprehensive security posture management, automated backup strategies, and regulatory compliance to protect your data and reputation.</div>
-    </div>
-    <div class="service-card">
-      <div class="service-icon">
-        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-      </div>
-      <div class="service-title">Automation & Process Optimization</div>
-      <div class="service-desc">Identify bottlenecks and implement intelligent automation to reduce manual overhead, lower costs, and scale your operations efficiently.</div>
-    </div>
-    <div class="service-card">
-      <div class="service-icon">
-        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/></svg>
-      </div>
-      <div class="service-title">Infrastructure IT & Project Mobilization</div>
-      <div class="service-desc">From greenfield deployments to legacy modernization — we plan, execute, and lead complex IT projects from kickoff to go-live.</div>
-    </div>
-  </div>
-</section>
-
-<!-- WHY US -->
-<section id="why">
-  <div class="why-inner">
-    <div class="why-visual reveal">
-      <div class="why-ring">
-        <div class="dot"></div>
-        <div class="why-ring-inner">
-          <div class="why-ring-core">
-            <!-- Updated image path to point to the images subfolder -->
-            <img src="assets/images/previewlogo.png" alt="Primetech">
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="reveal">
-      <div class="section-label">Why Primetech</div>
-      <div class="section-title">Built on trust,<br>driven by results</div>
-      <ul class="why-points">
-        <li class="why-point">
-          <span class="why-point-num">01</span>
-          <div class="why-point-text">
-            <strong>Senior-Level Expertise</strong>
-            <p>Our consultants bring deep, hands-on experience across enterprise environments — no juniors learning on your dime.</p>
-          </div>
-        </li>
-        <li class="why-point">
-          <span class="why-point-num">02</span>
-          <div class="why-point-text">
-            <strong>Pragmatic & Scalable Solutions</strong>
-            <p>We design for where you are today and where you're heading — practical solutions that grow with your business.</p>
-          </div>
-        </li>
-        <li class="why-point">
-          <span class="why-point-num">03</span>
-          <div class="why-point-text">
-            <strong>Transparent Partnership</strong>
-            <p>Clear communication, honest timelines, and no hidden complexity. You're always in the loop, every step of the way.</p>
-          </div>
-        </li>
-        <li class="why-point">
-          <span class="why-point-num">04</span>
-          <div class="why-point-text">
-            <strong>Göteborg-Based, Globally Capable</strong>
-            <p>Local presence means fast response and cultural alignment. Our capabilities extend to support clients wherever they operate.</p>
-          </div>
-        </li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-<!-- CONTACT -->
-<section id="contact">
-  <div class="contact-inner">
-    <div class="contact-info reveal">
-      <div class="section-label">Get in touch</div>
-      <div class="section-title">Let's talk<br>about your IT</div>
-      <p class="section-desc" style="margin-top:1rem;">Ready to take your IT infrastructure to the next level? Fill out the form or reach us directly.</p>
-
-      <div class="contact-item">
-        <div class="contact-item-icon">
-          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-        </div>
-        <div>
-          <div class="contact-item-label">Email</div>
-          <div class="contact-item-value"><a href="mailto:info@primetechsolutions.se">info@primetechsolutions.se</a></div>
-        </div>
-      </div>
-
-      <div class="contact-item">
-        <div class="contact-item-icon">
-          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-        </div>
-        <div>
-          <div class="contact-item-label">Phone</div>
-          <div class="contact-item-value"><a href="tel:+46704312065">+46 70 431 20 65</a></div>
-        </div>
-      </div>
-
-      <div class="contact-item">
-        <div class="contact-item-icon">
-          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-        </div>
-        <div>
-          <div class="contact-item-label">Office</div>
-          <div class="contact-item-value">Göteborg, Sweden</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="reveal">
-      <form class="contact-form" action="https://formspree.io/f/mdalzzae" method="POST">
-        <div class="form-row">
-          <div class="form-group">
-            <label for="name">Full Name</label>
-            <input type="text" id="name" name="name" placeholder="Jane Andersson" required>
-          </div>
-          <div class="form-group">
-            <label for="company">Company</label>
-            <input type="text" id="company" name="company" placeholder="Acme AB">
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" placeholder="jane@acme.se" required>
-          </div>
-          <div class="form-group">
-            <label for="phone">Phone</label>
-            <input type="tel" id="phone" name="phone" placeholder="+46 70 000 00 00">
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="service">Service of Interest</label>
-          <select id="service" name="service">
-            <option value="">Select a service...</option>
-            <option>IT Operations & Managed Services</option>
-            <option>Microsoft 365 & Cloud Architecture</option>
-            <option>Security, Backup & Compliance</option>
-            <option>Automation & Process Optimization</option>
-            <option>Infrastructure IT & Project Mobilization</option>
-            <option>Other / General Inquiry</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="message">Message</label>
-          <textarea id="message" name="message" placeholder="Tell us about your project or challenge..." required></textarea>
-        </div>
-        <div class="success-msg" id="successMsg">✓ Message sent! We'll be in touch shortly.</div>
-        <div class="form-submit">
-          <span class="form-note">We typically respond within 24 hours.</span>
-          <button type="submit" class="btn-primary">Send Message →</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <div class="footer-logo">Primetech<span> Solutions</span></div>
-  <div class="footer-copy">© 2025 Primetech Solutions. All rights reserved. · Göteborg, Sweden</div>
-</footer>
-
-<script>
-  // Scroll reveal
-  const reveals = document.querySelectorAll('.reveal');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
-    });
-  }, { threshold: 0.1 });
-  reveals.forEach(r => observer.observe(r));
-
-  // Stagger service cards
-  document.querySelectorAll('.service-card').forEach((card, i) => {
-    card.style.transitionDelay = (i * 0.07) + 's';
-  });
-</script>
-</body>
-</html>
+   <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <!-- ── SEO Meta Tags ──────────────────────────────────────────────── -->
+        <title>Primetech Solutions – IT Consultancy Göteborg</title>
+       <meta
+              name="description"
+              content="Primetech Solutions delivers enterprise-grade IT services in Göteborg, Sweden — managed infrastructure, Microsoft 365, cloud architecture, security, and automation."
+            />
+       <meta name="author" content="Primetech Solutions" />
+   
+       <!-- ── Open Graph (Social sharing previews) ───────────────────────── -->
+       <meta property="og:title"       content="Primetech Solutions – IT Consultancy" />
+       <meta property="og:description" content="Enterprise-grade IT services for businesses that can't afford to stand still." />
+       <meta property="og:type"        content="website" />
+       <meta property="og:url"         content="https://primetechsolutions.se" />
+       <meta property="og:image"       content="https://primetechsolutions.se/assets/images/previewlogo.png" />
+   
+       <!-- ── Fonts ──────────────────────────────────────────────────────── -->
+       <link
+              href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap"
+              rel="stylesheet"
+            />
+   
+       <!-- ── Stylesheet ─────────────────────────────────────────────────── -->
+       <link rel="stylesheet" href="css/styles.css" />
+   </head>
+
+  <body>
+
+       <!-- ================================================================
+            NAV
+       ================================================================= -->
+       <nav>
+              <a class="nav-logo" href="#">
+                       <!-- Inline SVG logo -->
+                       <svg width="38" height="38" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-label="Primetech Solutions Logo">
+                                  <circle cx="50" cy="50" r="48" fill="var(--gold)" />
+                                  <text x="50" y="64" font-size="60" font-family="var(--font-head)" font-weight="800" text-anchor="middle" fill="var(--black)">P</text>text>
+                       </svg>svg>
+                       <span class="nav-logo-text">Primetech<span> Solutions</span></span>
+              </a>a>
+       
+             <!-- Desktop + mobile nav links -->
+             <ul class="nav-links" id="nav-links">
+                     <li><a href="#services">Services</a>a></li>
+                     <li><a href="#why">Why Us</a>a></li>
+                     <li><a href="#contact" class="nav-cta">Get in Touch</a>a></li>
+             </ul>ul>
+       
+             <!-- Mobile hamburger button -->
+             <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+                     <span></span>
+                     <span></span>
+                     <span></span>
+             </button>button>
+       </nav>
+  
+  
+      <!-- ================================================================
+           HERO
+      ================================================================= -->
+      <section id="hero">
+            <div class="hero-grid-bg"></div>div>
+            <div class="hero-glow"></div>div>
+      
+            <div class="hero-content">
+                    <div class="hero-badge">IT Consultancy · Göteborg, Sweden</div>div>
+            
+                    <h1>Technology<br>that <em>drives</em><br>your business</h1>
+            
+                    <p class="hero-sub">
+                      Primetech Solutions delivers enterprise-grade IT services — from managed
+                      infrastructure to cloud architecture — built for businesses that can't
+                      afford to stand still.
+                    </p>p>
+            
+                    <div class="hero-actions">
+                              <a href="#contact" class="btn-primary">Start a conversation</a>a>
+                              <a href="#services" class="btn-ghost">Our services</a>a>
+                    </div>div>
+            </div>div>
+      </section>section>
+  
+  
+      <!-- ================================================================
+           SERVICES
+      ================================================================= -->
+      <section id="services">
+            <div class="services-header reveal">
+                    <div>
+                               <div class="section-label">What we do</div>
+                               <div class="section-title">End-to-end IT<br>expertise</div>
+                    </div>
+                     <p class="section-desc">
+                                From day-to-day operations to complex cloud migrations, we handle the
+                                full spectrum of your IT needs with precision and strategic insight.
+                     </p>p>
+            </div>
+
+             <div class="services-grid reveal">
+
+                      <!-- Card 1 -->
+                      <div class="service-card">
+                                 <div class="service-icon">
+                                              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                                             <path d="M5 12H3l9-9 9 9h-2M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/>
+                                              </svg>svg>
+                                 </div>
+                                 <div class="service-title">IT Operations &amp; Managed Services</div>
+                                 <div class="service-desc">Proactive monitoring, helpdesk support, and complete management of your IT environment so your team can stay focused on what matters.</div>
+                      </div>
+
+                      <!-- Card 2 -->
+                      <div class="service-card">
+                                 <div class="service-icon">
+                                              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                                             <path d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/>
+                                              </svg>svg>
+                                 </div>
+                                 <div class="service-title">Microsoft 365 &amp; Cloud Architecture</div>
+                                 <div class="service-desc">Strategic design and deployment of Microsoft 365 environments and scalable cloud infrastructures aligned to your business objectives.</div>
+                      </div>
+
+                      <!-- Card 3 -->
+                      <div class="service-card">
+                                 <div class="service-icon">
+                                              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                                             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                              </svg>svg>
+                                 </div>
+                                 <div class="service-title">Security, Backup &amp; Compliance</div>
+                                 <div class="service-desc">Comprehensive security posture management, automated backup strategies, and regulatory compliance to protect your data and reputation.</div>
+                      </div>
+
+                      <!-- Card 4 -->
+                      <div class="service-card">
+                                 <div class="service-icon">
+                                              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                                             <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                              </svg>svg>
+                                 </div>
+                                 <div class="service-title">Automation &amp; Process Optimization</div>
+                                 <div class="service-desc">Identify bottlenecks and implement intelligent automation to reduce manual overhead, lower costs, and scale your operations efficiently.</div>
+                      </div>
+
+                      <!-- Card 5 -->
+                      <div class="service-card">
+                                 <div class="service-icon">
+                                              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                                             <path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/>
+                                              </svg>svg>
+                                 </div>
+                                 <div class="service-title">Infrastructure IT &amp; Project Mobilization</div>
+                                 <div class="service-desc">From greenfield deployments to legacy modernization — we plan, execute, and lead complex IT projects from kickoff to go-live.</div>
+                      </div>
+
+             </div>
+      </section>section>
+
+
+       <!-- ================================================================
+            WHY US
+       ================================================================= -->
+       <section id="why">
+              <div class="why-inner">
+
+                       <!-- Animated visual -->
+                       <div class="why-visual reveal">
+                                  <div class="why-ring">
+                                               <div class="dot"></div>
+                                               <div class="why-ring-inner">
+                                                              <div class="why-ring-core">
+                                                                               <img src="assets/images/previewlogo.png" alt="Primetech" />
+                                                              </div>
+                                               </div>
+                                  </div>
+                       </div>
+
+                       <!-- Text content -->
+                       <div class="reveal">
+                                  <div class="section-label">Why Primetech</div>
+                                  <div class="section-title">Built on trust,<br>driven by results</div>
+
+                                  <ul class="why-points">
+                                               <li class="why-point">
+                                                              <span class="why-point-num">01</span>span>
+                                                              <div class="why-point-text">
+                                                                               <strong>Senior-Level Expertise</strong>
+                                                                              <p>Our consultants bring deep, hands-on experience across enterprise environments — no juniors learning on your dime.</p>
+                                                              </div>
+                                               </li>
+                                              <li class="why-point">
+                                                <span class="why-point-num">02</span>span>
+                                                <div class="why-point-text">
+                                                                <strong>Pragmatic &amp; Scalable Solutions</strong>
+                                                                <p>We design for where you are today and where you're heading — practical solutions that grow with your business.</p>
+                                                </div>
+                                              </li>
+                                              <li class="why-point">
+                                                <span class="why-point-num">03</span>span>
+                                                <div class="why-point-text">
+                                                                <strong>Transparent Partnership</strong>
+                                                                <p>Clear communication, honest timelines, and no hidden complexity. You're always in the loop, every step of the way.</p>
+                                                </div>
+                                              </li>
+                                              <li class="why-point">
+                                                <span class="why-point-num">04</span>span>
+                                                <div class="why-point-text">
+                                                                <strong>Göteborg-Based, Globally Capable</strong>
+                                                                <p>Local presence means fast response and cultural alignment. Our capabilities extend to support clients wherever they operate.</p>
+                                                </div>
+                                              </li>
+                                  </ul>ul>
+                       </div>
+              
+              </div>
+       </section>section>
+  
+  
+      <!-- ================================================================
+           CONTACT
+      ================================================================= -->
+      <section id="contact">
+            <div class="contact-inner">
+            
+                    <!-- Contact info sidebar -->
+                    <div class="contact-info reveal">
+                              <div class="section-label">Get in touch</div>
+                              <div class="section-title">Let's talk<br>about your IT</div>
+                              <p class="section-desc" style="margin-top:1rem;">
+                                           Ready to take your IT infrastructure to the next level? Fill out the form or reach us directly.
+                              </p>
+
+                               <div class="contact-item">
+                                            <div class="contact-item-icon">
+                                                           <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                                                            <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                                           </svg>svg>
+                                            </div>
+                                            <div>
+                                                           <div class="contact-item-label">Email</div>
+                                                           <div class="contact-item-value">
+                                                                            <a href="mailto:info@primetechsolutions.se">info@primetechsolutions.se</a>a>
+                                                           </div>
+                                            </div>
+                               </div>
+
+                               <div class="contact-item">
+                                            <div class="contact-item-icon">
+                                                           <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                                                            <path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                                                           </svg>svg>
+                                            </div>
+                                            <div>
+                                                           <div class="contact-item-label">Phone</div>
+                                                           <div class="contact-item-value">
+                                                                            <a href="tel:+46704312065">+46 70 431 20 65</a>a>
+                                                           </div>
+                                            </div>
+                               </div>
+
+                               <div class="contact-item">
+                                            <div class="contact-item-icon">
+                                                           <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                                                            <path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                                                            <path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                                           </svg>svg>
+                                            </div>
+                                            <div>
+                                                           <div class="contact-item-label">Office</div>
+                                                           <div class="contact-item-value">Göteborg, Sweden</div>
+                                            </div>
+                               </div>
+                    </div>
+
+                     <!-- Contact form -->
+                     <div class="reveal">
+                                <form class="contact-form" action="https://formspree.io/f/mdalzzae" method="POST">
+
+                                             <div class="form-row">
+                                                            <div class="form-group">
+                                                                             <label for="name">Full Name</label>label>
+                                                                             <input type="text" id="name" name="name" placeholder="Jane Andersson" required />
+                                                            </div>
+                                                            <div class="form-group">
+                                                                             <label for="company">Company</label>label>
+                                                                             <input type="text" id="company" name="company" placeholder="Acme AB" />
+                                                            </div>
+                                             </div>
+
+                                             <div class="form-row">
+                                                            <div class="form-group">
+                                                                             <label for="email">Email</label>label>
+                                                                             <input type="email" id="email" name="email" placeholder="jane@acme.se" required />
+                                                            </div>
+                                                            <div class="form-group">
+                                                                             <label for="phone">Phone</label>label>
+                                                                             <input type="tel" id="phone" name="phone" placeholder="+46 70 000 00 00" />
+                                                            </div>
+                                             </div>
+
+                                             <div class="form-group">
+                                                            <label for="service">Service of Interest</label>label>
+                                                            <select id="service" name="service">
+                                                                             <option value="">Select a service...</option>option>
+                                                                             <option>IT Operations &amp; Managed Services</option>
+                                                                            <option>Microsoft 365 &amp; Cloud Architecture</option>
+                                                                            <option>Security, Backup &amp; Compliance</option>
+                                                                            <option>Automation &amp; Process Optimization</option>
+                                                                            <option>Infrastructure IT &amp; Project Mobilization</option>
+                                                                            <option>Other / General Inquiry</option>
+                                                            </select>select>
+                                             </div>
+                                
+                                            <div class="form-group">
+                                                          <label for="message">Message</label>label>
+                                                          <textarea id="message" name="message" placeholder="Tell us about your project or challenge..." required></textarea>
+                                            </div>
+                                
+                                            <div class="success-msg" id="successMsg">&#10003; Message sent! We'll be in touch shortly.</div>
+                                
+                                            <div class="form-submit">
+                                                          <span class="form-note">We typically respond within 24 hours.</span>
+                                                          <button type="submit" class="btn-primary">Send Message &rarr;</button>button>
+                                            </div>
+                                
+                                </form>form>
+                     </div>
+            
+            </div>
+      </section>section>
+  
+  
+      <!-- ================================================================
+           FOOTER
+      ================================================================= -->
+      <footer>
+             <div class="footer-logo">Primetech<span> Solutions</span></div>
+            <div class="footer-copy">&copy; 2026 Primetech Solutions. All rights reserved. &middot; Göteborg, Sweden</div>
+      </footer>
+  
+  
+      <!-- ================================================================
+           SCRIPTS
+      ================================================================= -->
+      <script src="js/main.js"></script>
+  
+  </body>
+</html>html></span>
+      </footer></option></option>
+                              </p></p></strong>
+                    </div></em></h1></li></li></span>
+       </nav>
+  </body></title>
+   </head>
